@@ -33,11 +33,17 @@ public class LevelGrid : MonoBehaviour
         gridObject.RemoveUnit(unit);
     }
 
-    public GridPosition GetGridPosition(Vector3 worldPosition)
+    public GridPosition GetGridPosition(Vector3 worldPosition) => gridSystem.GetGridPosition(worldPosition);
+    public bool IsValidGridPosition(GridPosition gridPosition) => gridSystem.IsValidGridPosition(gridPosition);
+
+    public bool UnitOnGridPosition(GridPosition gridPosition)
     {
-        return gridSystem.GetGridPosition(worldPosition);
-    }   
-    
+        GridObject gridObject = gridSystem.GetGridObject(gridPosition);
+        return gridObject.GetUnitList().Count > 0;
+    }
+
+
+
     public void UnitMovedGridPosition(Unit unit, GridPosition from, GridPosition to)
     {
         Debug.Log("Move");
@@ -45,18 +51,13 @@ public class LevelGrid : MonoBehaviour
         AddUnitAtGridPosition(to, unit);
     }
 
-    public bool OutOfRange()
-    {
-        GridPosition gridPosition = gridSystem.GetGridPosition(MouseWorld.GetPosition());
-        if (gridPosition.x < 0 || gridPosition.z < 0 || gridPosition.x >= gridSystem.GetWidth() || gridPosition.x >= gridSystem.GetHeight())
-            return true;
-        return false;
-    }
-
-    public Vector3 GetUnitWorldPosition(Unit unit, GridPosition gridPosition)
+    public Vector3 GetWorldPosition(GridPosition gridPosition)
     {
         return gridSystem.GetWorldPosition(gridPosition);
     }
+
+    public int GetWidth() => gridSystem.GetWidth();
+    public int GetHeight() => gridSystem.GetHeight();
 
     private void Update()
     {

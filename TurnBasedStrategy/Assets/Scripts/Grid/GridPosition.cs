@@ -18,6 +18,16 @@ public struct GridPosition
                z == position.z;
     }
 
+    //Validate if user can move to that position
+    public bool ValidateGridPosition(Unit unit, int maxDistance)
+    {
+        GridPosition currentPosition = unit.GetGridPosition();
+        if (Math.Abs(this.x - currentPosition.x) > maxDistance || Math.Abs(this.z - currentPosition.z) > maxDistance)
+            return false;
+        else
+            return true;
+    }
+
     public override int GetHashCode()
     {
         return HashCode.Combine(x, z);
@@ -36,5 +46,15 @@ public struct GridPosition
     public static bool operator !=(GridPosition a, GridPosition b)
     {
         return !(a == b);
+    }
+
+    public static GridPosition operator +(GridPosition a, GridPosition b)
+    {
+        return new GridPosition(a.x + b.x, a.z + b.z);
+    }
+
+    public static GridPosition operator -(GridPosition a, GridPosition b)
+    {
+        return new GridPosition(a.x - b.x, a.z - b.z);
     }
 }

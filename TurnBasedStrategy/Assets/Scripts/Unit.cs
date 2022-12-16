@@ -4,41 +4,20 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField]
-    private Animator unitAnimator;
-    private Vector3 targetPosition;
     private GridPosition gridPosition;
 
     private void Awake()
     {
+        //Find the grid position closest to where the character is placed and move the character there.
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
-        transform.position = LevelGrid.Instance.GetUnitWorldPosition(this, gridPosition);
-        targetPosition = transform.position;
+        transform.position = LevelGrid.Instance.GetWorldPosition(gridPosition);
+        
         this.name = "Unit";
     }
-    private void Start()
-    {
-        
-    }
+
     private void Update()
     {
-        float stoppingDistance = .1f;
-        if (Vector3.Distance(targetPosition, transform.position) > stoppingDistance)
-        {
-            Vector3 moveDirection = (targetPosition - transform.position).normalized;
-            float moveSpeed = 4f;
-            transform.position += moveDirection * moveSpeed * Time.deltaTime;
-
-            float rotateSpeed = 10f;
-            transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
-            unitAnimator.SetBool("Moving", true);
-        }
-        else
-        {
-            unitAnimator.SetBool("Moving", false);
-                        
-        }
         GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         if (newGridPosition != gridPosition)
         {
@@ -46,9 +25,10 @@ public class Unit : MonoBehaviour
             gridPosition = newGridPosition;
         }
     }
-    public void Move(Vector3 MovePosition)
+
+    public GridPosition GetGridPosition()
     {
-        GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(MovePosition);
-        targetPosition = LevelGrid.Instance.GetUnitWorldPosition(this, gridPosition);
-    }    
+        return gridPosition;
+    }
+       
 }
