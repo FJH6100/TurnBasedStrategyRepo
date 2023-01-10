@@ -5,6 +5,7 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     private GridPosition gridPosition;
+    private BaseAction[] baseActionArray;
 
     private void Awake()
     {
@@ -14,6 +15,7 @@ public class Unit : MonoBehaviour
         transform.position = LevelGrid.Instance.GetWorldPosition(gridPosition);
         
         this.name = "Unit";
+        baseActionArray = GetComponents<BaseAction>();
     }
 
     private void Update()
@@ -29,6 +31,11 @@ public class Unit : MonoBehaviour
     public GridPosition GetGridPosition()
     {
         return gridPosition;
+    }
+
+    public BaseAction[] GetBaseActionArray()
+    {
+        return baseActionArray;
     }
        
 }
