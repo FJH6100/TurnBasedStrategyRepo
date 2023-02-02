@@ -46,7 +46,6 @@ public class LevelGrid : MonoBehaviour
 
     public void UnitMovedGridPosition(Unit unit, GridPosition from, GridPosition to)
     {
-        Debug.Log("Move");
         RemoveUnitAtGridPosition(from, unit);
         AddUnitAtGridPosition(to, unit);
     }

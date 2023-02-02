@@ -2,15 +2,21 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UnitActionSystem : MonoBehaviour
 {
     public static UnitActionSystem Instance { get; private set; }
     public event EventHandler OnSelectedUnitChange;
+    public event EventHandler OnSelectedActionChange;
+    public event EventHandler OnActionTaken;
+    public event EventHandler OnActionPointsRestore;
     [SerializeField]
     private Unit selectedUnit;
     [SerializeField]
     private LayerMask UnitLayerMask;
+    [SerializeField]
+    private GameObject busyUI;
     private BaseAction selectedAction;
     private bool isBusy;
 
@@ -30,6 +36,8 @@ public class UnitActionSystem : MonoBehaviour
         if (isBusy)
             return;
 
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
         if (TryHandleUnitSelection()) 
             return;
 
@@ -40,30 +48,23 @@ public class UnitActionSystem : MonoBehaviour
     {
         if (isBusy)
             return;
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && selectedUnit.GetActionPoints() > 0)
         {
-            switch(selectedAction)
-            {
-                case MoveAction moveAction:
-                    if (TryHandleUnitSelection()) return;
-                    moveAction.Move(MouseWorld.GetPosition());
-                    SetBusy();
-                    break;
-                case SpinAction spinAction:
-                    spinAction.Spin();
-                    SetBusy();
-                    break;
-            }    
+            if (selectedAction.TakeAction(MouseWorld.GetPosition()))
+                OnActionTaken(this, EventArgs.Empty);
+            //selectedUnit.SubtractActionPoint();
         }
     }
     public void SetBusy()
     {
         isBusy = true;
+        busyUI.SetActive(true);
     }
 
     public void ClearBusy()
     {
         isBusy = false;
+        busyUI.SetActive(false);
     }
 
     private bool TryHandleUnitSelection()
@@ -75,6 +76,11 @@ public class UnitActionSystem : MonoBehaviour
             {
                 if (hit.transform.TryGetComponent<Unit>(out Unit unit))
                 {
+                    //Unit already selected
+                    if (selectedUnit == unit)
+                    {
+                        return false;
+                    }
                     SetSelectedUnit(unit);
                     return true;
                 }
@@ -94,10 +100,24 @@ public class UnitActionSystem : MonoBehaviour
     public void SetSelectedAction(BaseAction baseAction)
     {
         selectedAction = baseAction;
+        if (OnSelectedActionChange != null)
+            OnSelectedActionChange(this, EventArgs.Empty);
     }
 
     public Unit GetSelectedUnit()
     {
         return selectedUnit;
+    }
+
+    public BaseAction GetSelectedAction()
+    {
+        return selectedAction;
+    }
+    
+    public void ActionPointRefresh()
+    {
+        foreach (Unit u in Resources.FindObjectsOfTypeAll<Unit>())
+            u.RestoreActionPoints();
+        OnActionPointsRestore(this, EventArgs.Empty);
     }
 }

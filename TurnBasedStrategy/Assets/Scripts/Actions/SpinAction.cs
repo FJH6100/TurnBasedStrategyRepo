@@ -10,14 +10,23 @@ public class SpinAction : BaseAction
         base.Awake();
         spinDegrees = 0;
     }
-    public void Spin()
+    public override bool TakeAction(Vector3 position)
     {
         isActive = true;
+        UnitActionSystem.Instance.SetBusy();
+        return true;
     }
 
     public override string GetActionName()
     {
         return "SPIN";
+    }
+    public override List<GridPosition> GetValidActionGridPositionList()
+    {
+        List<GridPosition> validGridPositionList = new List<GridPosition>();
+        GridPosition unitGridPosition = unit.GetGridPosition();
+        validGridPositionList.Add(unitGridPosition);
+        return validGridPositionList;
     }
     private void Update()
     {

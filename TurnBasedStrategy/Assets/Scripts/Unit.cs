@@ -1,11 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
     private GridPosition gridPosition;
     private BaseAction[] baseActionArray;
+    [SerializeField]
+    private int actionPoints = 2;
+    [SerializeField]
+    private bool isEnemy;
+    private int defaultActionPoints;
 
     private void Awake()
     {
@@ -16,6 +20,7 @@ public class Unit : MonoBehaviour
         
         this.name = "Unit";
         baseActionArray = GetComponents<BaseAction>();
+        defaultActionPoints = actionPoints;
     }
 
     private void Update()
@@ -36,6 +41,22 @@ public class Unit : MonoBehaviour
     public BaseAction[] GetBaseActionArray()
     {
         return baseActionArray;
+    }
+
+    public int GetActionPoints()
+    {
+        return actionPoints;
+    }
+
+    public void SubtractActionPoint()
+    {
+        if (actionPoints > 0)
+            actionPoints--;
+    }
+
+    public void RestoreActionPoints()
+    {
+        actionPoints = defaultActionPoints;
     }
        
 }

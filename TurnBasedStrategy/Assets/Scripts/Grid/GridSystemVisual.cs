@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,8 +26,8 @@ public class GridSystemVisual : MonoBehaviour
     private void Update()
     {
         HideAllGridPositions();
-        Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-        ShowGridPositionList(selectedUnit.GetComponent<MoveAction>().GetValidActionGridPositionList());
+        BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
+        ShowGridPositionList(selectedAction.GetValidActionGridPositionList());
     }
 
     public void HideAllGridPositions()
