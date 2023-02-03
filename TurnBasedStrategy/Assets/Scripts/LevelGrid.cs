@@ -42,8 +42,6 @@ public class LevelGrid : MonoBehaviour
         return gridObject.GetUnitList().Count > 0;
     }
 
-
-
     public void UnitMovedGridPosition(Unit unit, GridPosition from, GridPosition to)
     {
         RemoveUnitAtGridPosition(from, unit);
@@ -57,9 +55,4 @@ public class LevelGrid : MonoBehaviour
 
     public int GetWidth() => gridSystem.GetWidth();
     public int GetHeight() => gridSystem.GetHeight();
-
-    private void Update()
-    {
-        //Debug.Log(gridSystem.GetGridPosition(MouseWorld.GetPosition()));
-    }
 }

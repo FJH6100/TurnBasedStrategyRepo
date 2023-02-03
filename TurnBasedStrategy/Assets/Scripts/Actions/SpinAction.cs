@@ -12,9 +12,17 @@ public class SpinAction : BaseAction
     }
     public override bool TakeAction(Vector3 position)
     {
-        isActive = true;
-        UnitActionSystem.Instance.SetBusy();
-        return true;
+        GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(position);
+        if (IsValidActionGridPosition(gridPosition))
+        {
+            isActive = true;
+            UnitActionSystem.Instance.SetBusy();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public override string GetActionName()

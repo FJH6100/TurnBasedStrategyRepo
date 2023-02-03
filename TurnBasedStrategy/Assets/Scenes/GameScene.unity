@@ -1663,6 +1663,11 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 516390531891945152, guid: ad53199bfbb896549b10ec109bba81d4,
+        type: 3}
+      propertyPath: maxMoveDistance
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 931313430520089201, guid: ad53199bfbb896549b10ec109bba81d4,
         type: 3}
       propertyPath: m_RootOrder
@@ -2409,6 +2414,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UnitEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2710764306317974572, guid: 10babb61feccfc948ae189ff8131e20e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []

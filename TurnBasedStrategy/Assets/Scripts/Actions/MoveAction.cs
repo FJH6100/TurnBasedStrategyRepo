@@ -38,9 +38,9 @@ public class MoveAction : BaseAction
         transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
     }
 
-    public override bool TakeAction(Vector3 MovePosition)
+    public override bool TakeAction(Vector3 position)
     {
-        GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(MovePosition);
+        GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(position);
         if (IsValidActionGridPosition(gridPosition))
         {
             targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
@@ -54,13 +54,15 @@ public class MoveAction : BaseAction
         }
     }
 
+    //Search for one larger than max move range, then create the circle
     public override List<GridPosition> GetValidActionGridPositionList()
     {
+        int oneMoreMax = maxMoveDistance + 1;
         List<GridPosition> validGridPositionList = new List<GridPosition>();
         GridPosition unitGridPosition = unit.GetGridPosition();
-        for (int x = -maxMoveDistance; x <= maxMoveDistance; x++)
+        for (int x = -oneMoreMax; x <= oneMoreMax; x++)
         {
-            for (int z = -maxMoveDistance; z <= maxMoveDistance; z++)
+            for (int z = -oneMoreMax; z <= oneMoreMax; z++)
             {
                 GridPosition offsetGridPosition = new GridPosition(x, z);
                 GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
@@ -76,7 +78,10 @@ public class MoveAction : BaseAction
                 if (LevelGrid.Instance.UnitOnGridPosition(testGridPosition))
                     continue;
                 //Radial check
-                if (Mathf.Abs(gridPositionValue - testPositionValue) > maxMoveDistance || Mathf.Abs(gridPositionValueNeg - testPositionValueNeg) > maxMoveDistance)
+                if (Mathf.Abs(gridPositionValue - testPositionValue) > oneMoreMax || Mathf.Abs(gridPositionValueNeg - testPositionValueNeg) > oneMoreMax)
+                    continue;
+                //Round the circle
+                if (Mathf.Abs(testGridPosition.x - unitGridPosition.x) == oneMoreMax || Mathf.Abs(testGridPosition.z - unitGridPosition.z) == oneMoreMax)
                     continue;
                 validGridPositionList.Add(testGridPosition);
             }
