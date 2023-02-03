@@ -77,7 +77,7 @@ public class UnitActionSystem : MonoBehaviour
                 if (hit.transform.TryGetComponent<Unit>(out Unit unit))
                 {
                     //Unit already selected
-                    if (selectedUnit == unit)
+                    if (unit.IsEnemy() || selectedUnit == unit)
                     {
                         return false;
                     }
@@ -116,8 +116,18 @@ public class UnitActionSystem : MonoBehaviour
     
     public void ActionPointRefresh()
     {
-        foreach (Unit u in Resources.FindObjectsOfTypeAll<Unit>())
-            u.RestoreActionPoints();
-        OnActionPointsRestore(this, EventArgs.Empty);
+        if (TurnSystem.Instance.IsPlayerTurn())
+        {
+            foreach (Unit u in Resources.FindObjectsOfTypeAll<Unit>())
+            {
+                if (!u.IsEnemy())
+                    u.RestoreActionPoints();
+            }
+            OnActionPointsRestore(this, EventArgs.Empty);
+        }
+        else
+        {
+            EnemyAI.Instance.EnemyTurn();
+        }
     }
 }

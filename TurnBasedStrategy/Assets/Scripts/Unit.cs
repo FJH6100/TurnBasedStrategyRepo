@@ -58,5 +58,10 @@ public class Unit : MonoBehaviour
     {
         actionPoints = defaultActionPoints;
     }
+
+    public bool IsEnemy()
+    {
+        return isEnemy;
+    }
        
 }
