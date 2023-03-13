@@ -1726,12 +1726,12 @@ PrefabInstance:
     - target: {fileID: 931313430520089214, guid: ad53199bfbb896549b10ec109bba81d4,
         type: 3}
       propertyPath: actionPoints
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 931313430520089215, guid: ad53199bfbb896549b10ec109bba81d4,
         type: 3}
       propertyPath: m_Name
-      value: Unit (1)
+      value: Unit2
       objectReference: {fileID: 0}
     - target: {fileID: 4523869225729429251, guid: ad53199bfbb896549b10ec109bba81d4,
         type: 3}

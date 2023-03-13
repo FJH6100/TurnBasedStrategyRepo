@@ -34,7 +34,7 @@ public class GridObject
     {
         string unitString = "";
         foreach (Unit unit in unitList)
-            unitString += unit + "\n";
+            unitString += unit.name + "\n";
         return "x: " + gridPosition.x + " z: " + gridPosition.z + "\n" + unitString;
     }
 }

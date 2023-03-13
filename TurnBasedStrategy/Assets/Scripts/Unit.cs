@@ -10,6 +10,8 @@ public class Unit : MonoBehaviour
     [SerializeField]
     private bool isEnemy;
     private int defaultActionPoints;
+    [SerializeField]
+    private int healthPoints = 100;
 
     private void Awake()
     {
@@ -18,9 +20,10 @@ public class Unit : MonoBehaviour
         LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
         transform.position = LevelGrid.Instance.GetWorldPosition(gridPosition);
         
-        this.name = "Unit";
+        //this.name = "Unit";
         baseActionArray = GetComponents<BaseAction>();
         defaultActionPoints = actionPoints;
+        Debug.Log(this.name + " Starting Health: " + healthPoints);
     }
 
     private void Update()
@@ -30,6 +33,17 @@ public class Unit : MonoBehaviour
         {
             LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
             gridPosition = newGridPosition;
+        }
+    }
+
+    public void TakeDamage(int shootDamage)
+    {
+        healthPoints -= shootDamage;
+        Debug.Log(this.name + " health points remaining: " + healthPoints);
+        if (healthPoints <= 0)
+        {
+            LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
+            Destroy(this.gameObject);
         }
     }
 

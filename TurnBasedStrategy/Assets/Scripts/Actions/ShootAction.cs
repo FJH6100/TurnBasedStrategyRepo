@@ -6,6 +6,8 @@ public class ShootAction : BaseAction
 {
     [SerializeField]
     private int maxShootDistance = 4;
+    [SerializeField]
+    private int shootDamage = 50;
     private Transform target;
     public override string GetActionName()
     {
@@ -70,6 +72,8 @@ public class ShootAction : BaseAction
             if (Vector3.Dot(transform.forward.normalized, moveDirection.normalized) > .99f)
             {
                 isActive = false;
+                if (target.GetComponent<Unit>() != null)
+                    target.GetComponent<Unit>().TakeDamage(shootDamage);
                 target = null;
                 UnitActionSystem.Instance.ClearBusy();
             }
