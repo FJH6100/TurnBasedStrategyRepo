@@ -19,7 +19,10 @@ public class GridSystem
         {
             for (int z = 0; z < height; z++)
             {
-                gridObjectArray[x, z] = new GridObject(this, new GridPosition(x, z));
+                bool mine = false;
+                if (x == 2 && z == 2)
+                    mine = true;
+                gridObjectArray[x, z] = new GridObject(this, new GridPosition(x, z), mine);
             }
         }
     }
@@ -56,6 +59,10 @@ public class GridSystem
                 Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
                 GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
                 gridDebugObject.SetGridObject(GetGridObject(gridPosition));
+                if (gridObjectArray[x, z].GetIsMine())
+                {
+                    gridDebugObject.SetMine();
+                }
             }
         }
     }

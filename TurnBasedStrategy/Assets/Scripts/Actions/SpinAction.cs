@@ -10,9 +10,8 @@ public class SpinAction : BaseAction
         base.Awake();
         spinDegrees = 0;
     }
-    public override bool TakeAction(Vector3 position)
+    public override bool TakeAction(GridPosition gridPosition)
     {
-        GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(position);
         if (IsValidActionGridPosition(gridPosition))
         {
             isActive = true;
@@ -48,6 +47,8 @@ public class SpinAction : BaseAction
                 isActive = false;
                 spinDegrees = 0;
                 UnitActionSystem.Instance.ClearBusy();
+                if (GetComponent<Unit>().IsEnemy())
+                    EnemyAI.Instance.OnActionCompleted();
             }
         }
     }

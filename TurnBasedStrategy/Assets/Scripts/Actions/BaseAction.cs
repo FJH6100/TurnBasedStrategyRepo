@@ -13,7 +13,7 @@ public abstract class BaseAction : MonoBehaviour
     }
 
     public abstract string GetActionName();
-    public abstract bool TakeAction(Vector3 position);
+    public abstract bool TakeAction(GridPosition gridPosition);
     public virtual bool IsValidActionGridPosition(GridPosition gridPosition)
     {
         List<GridPosition> validGridPositionList = GetValidActionGridPositionList();

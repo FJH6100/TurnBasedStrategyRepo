@@ -15,4 +15,8 @@ public class GridDebugObject : MonoBehaviour
     {
         textMeshPro.text = gridObject.ToString();
     }
+    public void SetMine()
+    {
+        textMeshPro.GetComponent<TextMeshPro>().color = Color.red;
+    }
 }

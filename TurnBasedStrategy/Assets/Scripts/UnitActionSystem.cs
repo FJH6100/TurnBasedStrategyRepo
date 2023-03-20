@@ -50,9 +50,13 @@ public class UnitActionSystem : MonoBehaviour
             return;
         if (Input.GetMouseButtonDown(0) && selectedUnit.GetActionPoints() > 0)
         {
-            if (selectedAction.TakeAction(MouseWorld.GetPosition()))
+            GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
+            if (selectedAction.TakeAction(gridPosition))
+            {
+                selectedUnit.SubtractActionPoint();
                 OnActionTaken(this, EventArgs.Empty);
-            //selectedUnit.SubtractActionPoint();
+            }
+            
         }
     }
     public void SetBusy()
@@ -128,6 +132,11 @@ public class UnitActionSystem : MonoBehaviour
         else
         {
             EnemyAI.Instance.EnemyTurn();
+            foreach (Unit u in Resources.FindObjectsOfTypeAll<Unit>())
+            {
+                if (u.IsEnemy())
+                    u.RestoreActionPoints();
+            }
         }
     }
 }

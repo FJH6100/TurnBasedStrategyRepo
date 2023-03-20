@@ -12,6 +12,10 @@ public class Unit : MonoBehaviour
     private int defaultActionPoints;
     [SerializeField]
     private int healthPoints = 100;
+    private int maxHealthPoints;
+    public event EventHandler OnDamaged;
+    public static event EventHandler OnAnyUnitSpawned;
+    public static event EventHandler OnAnyUnitDead;
 
     private void Awake()
     {
@@ -19,11 +23,14 @@ public class Unit : MonoBehaviour
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
         transform.position = LevelGrid.Instance.GetWorldPosition(gridPosition);
-        
-        //this.name = "Unit";
         baseActionArray = GetComponents<BaseAction>();
         defaultActionPoints = actionPoints;
-        Debug.Log(this.name + " Starting Health: " + healthPoints);
+        maxHealthPoints = healthPoints;
+    }
+
+    private void Start()
+    {
+        OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     private void Update()
@@ -39,12 +46,18 @@ public class Unit : MonoBehaviour
     public void TakeDamage(int shootDamage)
     {
         healthPoints -= shootDamage;
-        Debug.Log(this.name + " health points remaining: " + healthPoints);
+        OnDamaged?.Invoke(this, EventArgs.Empty);
         if (healthPoints <= 0)
         {
             LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
+            OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
             Destroy(this.gameObject);
         }
+    }
+
+    public float ReturnNormalizedHealth()
+    {
+        return (float)healthPoints / maxHealthPoints;
     }
 
     public GridPosition GetGridPosition()
@@ -55,6 +68,11 @@ public class Unit : MonoBehaviour
     public BaseAction[] GetBaseActionArray()
     {
         return baseActionArray;
+    }
+
+    public SpinAction GetSpinAction()
+    {
+        return GetComponent<SpinAction>();
     }
 
     public int GetActionPoints()

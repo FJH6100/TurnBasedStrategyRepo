@@ -38,9 +38,8 @@ public class MoveAction : BaseAction
         transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
     }
 
-    public override bool TakeAction(Vector3 position)
+    public override bool TakeAction(GridPosition gridPosition)
     {
-        GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(position);
         if (IsValidActionGridPosition(gridPosition))
         {
             targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);

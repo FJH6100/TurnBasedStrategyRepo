@@ -21,24 +21,51 @@ public class CameraController : MonoBehaviour
     }
     private void Update()
     {
+        if (Input.touchCount > 0)
+            Debug.Log("Touched");
         Vector3 inputMoveDirection = new Vector3(0,0,0);
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetAxisRaw("Vertical") > 0)
             inputMoveDirection.z += 1f;
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetAxisRaw("Vertical") < 0)
             inputMoveDirection.z -= 1f;
-        if (Input.GetKey(KeyCode.A) && !Input.GetMouseButton(1))
+        if (Input.GetAxisRaw("Horizontal") < 0 && !Input.GetMouseButton(1))
             inputMoveDirection.x -= 1f;
-        if (Input.GetKey(KeyCode.D) && !Input.GetMouseButton(1))
+        if (Input.GetAxisRaw("Horizontal") > 0 && !Input.GetMouseButton(1))
             inputMoveDirection.x += 1f;
+
+        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Moved)
+        {
+            // Get movement of the finger since last frame
+            Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
+            if (touchDeltaPosition.y > 1)
+                inputMoveDirection.z += 1f;
+            if (touchDeltaPosition.y < -1)
+                inputMoveDirection.z -= 1f;
+            if (touchDeltaPosition.x < 1)
+                inputMoveDirection.x -= 1f;
+            if (touchDeltaPosition.x > -1)
+                inputMoveDirection.x += 1f;
+        }
 
         Vector3 moveVector = inputMoveDirection.z * transform.forward + inputMoveDirection.x * transform.right;
         transform.position += moveVector * cameraSpeed * Time.deltaTime;
 
         Vector3 rotationVector = new Vector3(0, 0, 0);
-        if (Input.GetKey(KeyCode.D) && Input.GetMouseButton(1))
+        if (Input.GetAxisRaw("Horizontal") < 0 && Input.GetMouseButton(1))
             rotationVector.y -= 1f;
-        if (Input.GetKey(KeyCode.A) && Input.GetMouseButton(1))
+        if (Input.GetAxisRaw("Horizontal") > 0 && Input.GetMouseButton(1))
             rotationVector.y += 1f;
+
+        if (Input.touchCount == 2 && Input.GetTouch(1).phase == TouchPhase.Moved)
+        {
+            // Get movement of the finger since last frame
+            Vector2 touchDeltaPosition = Input.GetTouch(1).deltaPosition;
+            if (touchDeltaPosition.x < 1)
+                rotationVector.y -= 1f;
+            if (touchDeltaPosition.x > -1)
+                rotationVector.y += 1f;
+        }
+
         transform.eulerAngles += rotationVector;
 
         if (Input.mouseScrollDelta.y > 0f)

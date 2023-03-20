@@ -46,9 +46,8 @@ public class ShootAction : BaseAction
         return validGridPositionList;
     }
 
-    public override bool TakeAction(Vector3 position)
+    public override bool TakeAction(GridPosition gridPosition)
     {
-        GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(position);
         if (IsValidActionGridPosition(gridPosition))
         {
             target = LevelGrid.Instance.GetUnitListAtGridPosition(gridPosition)[0].transform;

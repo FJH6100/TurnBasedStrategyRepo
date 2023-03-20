@@ -68,8 +68,6 @@ public class UnitActionSystemUI : MonoBehaviour
     }
     private void UnitActionSystem_OnActionTaken(object sender, EventArgs e)
     {
-        Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-        selectedUnit.SubtractActionPoint();
         UpdateActionPoints();
     }
     private void UnitActionSystem_OnActionPointsRestore(object sender, EventArgs e)
