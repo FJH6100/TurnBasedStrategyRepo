@@ -75,6 +75,11 @@ public class Unit : MonoBehaviour
         return GetComponent<SpinAction>();
     }
 
+    public ShootAction GetShootAction()
+    {
+        return GetComponent<ShootAction>();
+    }
+
     public int GetActionPoints()
     {
         return actionPoints;

@@ -33,6 +33,8 @@ public class MoveAction : BaseAction
             unitAnimator.SetBool("Moving", false);
             isActive = false;
             UnitActionSystem.Instance.ClearBusy();
+            if (GetComponent<Unit>().IsEnemy())
+                EnemyAI.Instance.OnActionCompleted();
         }
         float rotateSpeed = 10f;
         transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
@@ -91,5 +93,16 @@ public class MoveAction : BaseAction
     public override string GetActionName()
     {
         return "MOVE";
+    }
+
+    public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+    {
+        int targetCount = unit.GetShootAction().GetTargetCountAtPosition(gridPosition);
+        return new EnemyAIAction
+        {
+            gridPosition = gridPosition,
+            actionValue = targetCount * 10,
+            //actionValue = 0,
+        };
     }
 }

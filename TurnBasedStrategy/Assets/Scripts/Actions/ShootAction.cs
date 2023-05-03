@@ -8,6 +8,12 @@ public class ShootAction : BaseAction
     private int maxShootDistance = 4;
     [SerializeField]
     private int shootDamage = 50;
+    [SerializeField]
+    private Animator unitAnimator;
+    [SerializeField]
+    private Transform bulletProjectilePrefab;
+    [SerializeField]
+    private Transform shootPointPrefab;
     private Transform target;
     public override string GetActionName()
     {
@@ -16,9 +22,14 @@ public class ShootAction : BaseAction
 
     public override List<GridPosition> GetValidActionGridPositionList()
     {
+        GridPosition unitGridPosition = unit.GetGridPosition();
+        return GetValidActionGridPositionList(unitGridPosition);
+    }
+
+    public List<GridPosition> GetValidActionGridPositionList(GridPosition unitGridPosition)
+    {
         int oneMoreMax = maxShootDistance + 1;
         List<GridPosition> validGridPositionList = new List<GridPosition>();
-        GridPosition unitGridPosition = unit.GetGridPosition();
         for (int x = -oneMoreMax; x <= oneMoreMax; x++)
         {
             for (int z = -oneMoreMax; z <= oneMoreMax; z++)
@@ -39,8 +50,16 @@ public class ShootAction : BaseAction
                     continue;
                 if (!LevelGrid.Instance.UnitOnGridPosition(testGridPosition))
                     continue;
-                if (LevelGrid.Instance.GetUnitListAtGridPosition(testGridPosition)[0].IsEnemy())
-                validGridPositionList.Add(testGridPosition);
+                if (TurnSystem.Instance.IsPlayerTurn())
+                {
+                    if (LevelGrid.Instance.GetUnitListAtGridPosition(testGridPosition)[0].IsEnemy())
+                        validGridPositionList.Add(testGridPosition);
+                }
+                else
+                {
+                    if (!LevelGrid.Instance.GetUnitListAtGridPosition(testGridPosition)[0].IsEnemy())
+                        validGridPositionList.Add(testGridPosition);
+                }
             }
         }
         return validGridPositionList;
@@ -71,11 +90,50 @@ public class ShootAction : BaseAction
             if (Vector3.Dot(transform.forward.normalized, moveDirection.normalized) > .99f)
             {
                 isActive = false;
+                StartCoroutine(ShootAnim());
                 if (target.GetComponent<Unit>() != null)
                     target.GetComponent<Unit>().TakeDamage(shootDamage);
                 target = null;
                 UnitActionSystem.Instance.ClearBusy();
+                if (GetComponent<Unit>().IsEnemy())
+                    EnemyAI.Instance.OnActionCompleted();
             }
         }
+    }
+
+    IEnumerator ShootAnim()
+    {
+        unitAnimator.SetTrigger("Shoot");
+        Transform bulletProjectileTransform = Instantiate(bulletProjectilePrefab, shootPointPrefab.position, Quaternion.identity);
+        BulletProjectile bulletProjectile = bulletProjectileTransform.GetComponent<BulletProjectile>();
+        Vector3 targetPosition = target.position;
+        targetPosition.y = shootPointPrefab.position.y;
+        bulletProjectile.Setup(targetPosition);
+        yield return new WaitForSeconds(.5f);
+    }
+
+    public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+    {
+        if (IsValidActionGridPosition(gridPosition))
+        {
+            return new EnemyAIAction
+            {
+                gridPosition = gridPosition,
+                actionValue = 50,
+            };
+        }
+        else
+        {
+            return new EnemyAIAction
+            {
+                gridPosition = gridPosition,
+                actionValue = -10,
+            };
+        }
+    }
+
+    public int GetTargetCountAtPosition(GridPosition gridPosition)
+    {
+        return GetValidActionGridPositionList(gridPosition).Count;
     }
 }

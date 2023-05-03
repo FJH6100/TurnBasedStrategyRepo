@@ -41,9 +41,9 @@ public class CameraController : MonoBehaviour
                 inputMoveDirection.z += 1f;
             if (touchDeltaPosition.y < -1)
                 inputMoveDirection.z -= 1f;
-            if (touchDeltaPosition.x < 1)
+            if (touchDeltaPosition.x > 1)
                 inputMoveDirection.x -= 1f;
-            if (touchDeltaPosition.x > -1)
+            if (touchDeltaPosition.x < -1)
                 inputMoveDirection.x += 1f;
         }
 

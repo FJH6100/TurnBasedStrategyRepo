@@ -35,6 +35,15 @@ public class SpinAction : BaseAction
         validGridPositionList.Add(unitGridPosition);
         return validGridPositionList;
     }
+
+    public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+    {
+        return new EnemyAIAction
+        {
+            gridPosition = gridPosition,
+            actionValue = 10,
+        };
+    }
     private void Update()
     {
         if (isActive)
