@@ -70,14 +70,14 @@ public class Unit : MonoBehaviour
         return baseActionArray;
     }
 
-    public SpinAction GetSpinAction()
+    public T GetAction<T>() where T : BaseAction
     {
-        return GetComponent<SpinAction>();
-    }
-
-    public ShootAction GetShootAction()
-    {
-        return GetComponent<ShootAction>();
+        foreach (BaseAction baseAction in baseActionArray)
+        {
+            if (baseAction is T)
+                return (T)baseAction;
+        }
+        return null;
     }
 
     public int GetActionPoints()

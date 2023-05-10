@@ -1,28 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class GridSystem
+public class GridSystem<TGridObject>
 {
     private int width;
     private int height;
     private float cellSize;
-    private GridObject[,] gridObjectArray;
-    public GridSystem(int width, int height, float cellSize)
+    private TGridObject[,] gridObjectArray;
+    public GridSystem(int width, int height, float cellSize, Func<GridSystem<TGridObject>, GridPosition, TGridObject> createGridObject)
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
 
-        gridObjectArray = new GridObject[width, height];
+        gridObjectArray = new TGridObject[width, height];
         for (int x = 0; x < width; x++)
         {
             for (int z = 0; z < height; z++)
             {
-                bool mine = false;
-                if (x == 2 && z == 2)
-                    mine = true;
-                gridObjectArray[x, z] = new GridObject(this, new GridPosition(x, z), mine);
+                //bool mine = false;
+                //if (x == 2 && z == 2)
+                //    mine = true;
+                gridObjectArray[x, z] = createGridObject(this, new GridPosition(x, z));
             }
         }
     }
@@ -58,16 +57,16 @@ public class GridSystem
                 GridPosition gridPosition = new GridPosition(x, z);
                 Transform debugTransform = GameObject.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
                 GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
-                gridDebugObject.SetGridObject(GetGridObject(gridPosition));
-                if (gridObjectArray[x, z].GetIsMine())
-                {
-                    gridDebugObject.SetMine();
-                }
+                gridDebugObject.SetGridObject(GetGridObject(gridPosition) as GridObject);
+                //if (gridObjectArray[x, z].GetIsMine() as GridObject)
+                //{
+                //    gridDebugObject.SetMine();
+                //}
             }
         }
     }
 
-    public GridObject GetGridObject(GridPosition gridPosition)
+    public TGridObject GetGridObject(GridPosition gridPosition)
     {
         return gridObjectArray[gridPosition.x, gridPosition.z];
     }

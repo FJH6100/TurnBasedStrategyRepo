@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class GridObject
 {
-    //private GridSystem gridSystem;
+    private GridSystem<GridObject> gridSystem;
     private GridPosition gridPosition;
     private List<Unit> unitList;
     private bool isMine;
 
-    public GridObject (GridSystem gridSystem, GridPosition gridPosition, bool mine)
+    //public GridObject(GridSystem gridSystem, GridPosition gridPosition, bool mine)
+    public GridObject (GridSystem<GridObject> gridSystem, GridPosition gridPosition)
     {
-        //this.gridSystem = gridSystem;
+        this.gridSystem = gridSystem;
         this.gridPosition = gridPosition;
         unitList = new List<Unit>();
-        isMine = mine;
+        isMine = false;
     }
 
     public bool GetIsMine()
