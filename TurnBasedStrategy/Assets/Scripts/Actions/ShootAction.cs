@@ -15,6 +15,8 @@ public class ShootAction : BaseAction
     [SerializeField]
     private Transform shootPointPrefab;
     private Transform target;
+    [SerializeField]
+    private LayerMask obstaclesLayerMask;
     public override string GetActionName()
     {
         return "SHOOT";
@@ -50,16 +52,22 @@ public class ShootAction : BaseAction
                     continue;
                 if (!LevelGrid.Instance.UnitOnGridPosition(testGridPosition))
                     continue;
-                if (TurnSystem.Instance.IsPlayerTurn())
+                Unit targetUnit = LevelGrid.Instance.GetUnitListAtGridPosition(testGridPosition)[0];
+                if (targetUnit.IsEnemy() == unit.IsEnemy())
                 {
-                    if (LevelGrid.Instance.GetUnitListAtGridPosition(testGridPosition)[0].IsEnemy())
-                        validGridPositionList.Add(testGridPosition);
+                    //If units are on the same team
+                    continue;
                 }
-                else
-                {
-                    if (!LevelGrid.Instance.GetUnitListAtGridPosition(testGridPosition)[0].IsEnemy())
-                        validGridPositionList.Add(testGridPosition);
-                }
+                Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                Vector3 shootDirection = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
+                float unitShoulderHeight = 1.7f;
+                //Check if blocked by obstacle
+                if (Physics.Raycast(unitWorldPosition + Vector3.up * unitShoulderHeight,
+                    shootDirection,
+                    Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
+                    obstaclesLayerMask))
+                    continue;
+                validGridPositionList.Add(testGridPosition);
             }
         }
         return validGridPositionList;
@@ -95,7 +103,7 @@ public class ShootAction : BaseAction
                     target.GetComponent<Unit>().TakeDamage(shootDamage);
                 target = null;
                 UnitActionSystem.Instance.ClearBusy();
-                if (GetComponent<Unit>().IsEnemy())
+                if (unit.IsEnemy())
                     EnemyAI.Instance.OnActionCompleted();
             }
         }

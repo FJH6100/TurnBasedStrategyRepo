@@ -55,6 +55,7 @@ public class UnitManager : MonoBehaviour
 
     public List<Unit> GetEnemyUnitList()
     {
+        Debug.Log("Enemies: " + enemyUnitList.Count);
         return enemyUnitList;
     }
 }

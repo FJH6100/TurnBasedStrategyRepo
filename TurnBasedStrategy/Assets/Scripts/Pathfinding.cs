@@ -8,9 +8,6 @@ public class Pathfinding : MonoBehaviour
     private const int MOVE_STRAIGHT_COST = 10;
     private const int MOVE_DIAGONAL_COST = 14;
     [SerializeField] private LayerMask obstaclesLayerMask;
-    private int width;
-    private int height;
-    private float cellSize;
     private GridSystem<PathNode> gridSystem;
     private void Awake()
     {
@@ -19,9 +16,6 @@ public class Pathfinding : MonoBehaviour
 
     public void Setup(int width, int height, float cellSize)
     {
-        this.width = width;
-        this.height = height;
-        this.cellSize = cellSize;
         gridSystem =
             new GridSystem<PathNode>(width, height, cellSize, (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
         for (int x = 0; x < gridSystem.GetWidth(); x++)
@@ -34,6 +28,7 @@ public class Pathfinding : MonoBehaviour
                 if (Physics.Raycast(worldPosition + Vector3.down * raycastOffsetDistance, Vector3.up, raycastOffsetDistance * 2,
                     obstaclesLayerMask))
                 {
+                    Debug.Log("Not Walkable");
                     GetNode(x, z).SetIsWalkable(false);
                 }
             }

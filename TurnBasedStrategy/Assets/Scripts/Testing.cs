@@ -17,6 +17,7 @@ public class Testing : MonoBehaviour
             GridPosition startPosition = new GridPosition(0, 0);
 
             List<GridPosition> gridPositionList = Pathfinding.Instance.FindPath(startPosition, mouseGridPosition, out int pathLength);
+            Debug.Log(gridPositionList.Count);
             for (int i = 0; i < gridPositionList.Count - 1; i++)
             {
                 Debug.DrawLine(

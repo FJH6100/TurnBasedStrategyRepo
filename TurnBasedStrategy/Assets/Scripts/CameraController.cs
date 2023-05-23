@@ -9,8 +9,8 @@ public class CameraController : MonoBehaviour
     private float cameraSpeed = 10f;
     [SerializeField]
     private CinemachineVirtualCamera cinemachineVirtualCamera;
-    private const float MIN_OFFSET = 2f;
-    private const float MAX_OFFSET = 12f;
+    private const float MIN_OFFSET = 4f;
+    private const float MAX_OFFSET = 14f;
     private CinemachineTransposer cinemachineTransposer;
     private Vector3 targetFollowOffset;
 

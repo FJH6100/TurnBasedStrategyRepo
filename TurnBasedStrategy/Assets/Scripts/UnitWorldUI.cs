@@ -19,7 +19,7 @@ public class UnitWorldUI : MonoBehaviour
     private void Start()
     {
         UpdateHealth();
-        unit.OnDamaged += Unit_OnDamaged;
+        unit.OnHealthChanged += Unit_OnHealthChanged;
     }
 
     private void LateUpdate()
@@ -33,7 +33,7 @@ public class UnitWorldUI : MonoBehaviour
         healthBarImage.fillAmount = healthPercentage;
     }
 
-    private void Unit_OnDamaged(object sender, EventArgs e)
+    private void Unit_OnHealthChanged(object sender, EventArgs e)
     {
         UpdateHealth();
     }

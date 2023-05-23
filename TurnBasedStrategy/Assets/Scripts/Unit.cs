@@ -13,7 +13,7 @@ public class Unit : MonoBehaviour
     [SerializeField]
     private int healthPoints = 100;
     private int maxHealthPoints;
-    public event EventHandler OnDamaged;
+    public event EventHandler OnHealthChanged;
     public static event EventHandler OnAnyUnitSpawned;
     public static event EventHandler OnAnyUnitDead;
 
@@ -46,13 +46,22 @@ public class Unit : MonoBehaviour
     public void TakeDamage(int shootDamage)
     {
         healthPoints -= shootDamage;
-        OnDamaged?.Invoke(this, EventArgs.Empty);
+        OnHealthChanged?.Invoke(this, EventArgs.Empty);
         if (healthPoints <= 0)
         {
             LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
             OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
             Destroy(this.gameObject);
         }
+    }
+
+    public void Heal(int healthGained)
+    {
+        if (healthPoints + healthGained > maxHealthPoints)
+            healthPoints = maxHealthPoints;
+        else
+            healthPoints = healthPoints + healthGained;
+        OnHealthChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public float ReturnNormalizedHealth()
@@ -85,6 +94,11 @@ public class Unit : MonoBehaviour
         return actionPoints;
     }
 
+    public void SetActionPoints(int points)
+    {
+        actionPoints = points;
+    }
+
     public void SubtractActionPoint()
     {
         if (actionPoints > 0)
@@ -100,5 +114,10 @@ public class Unit : MonoBehaviour
     {
         return isEnemy;
     }
-       
+
+    public Vector3 GetWorldPosition()
+    {
+        return LevelGrid.Instance.GetWorldPosition(gridPosition);
+    }
+
 }
