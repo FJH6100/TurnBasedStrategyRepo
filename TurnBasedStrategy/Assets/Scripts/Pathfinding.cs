@@ -28,7 +28,6 @@ public class Pathfinding : MonoBehaviour
                 if (Physics.Raycast(worldPosition + Vector3.down * raycastOffsetDistance, Vector3.up, raycastOffsetDistance * 2,
                     obstaclesLayerMask))
                 {
-                    Debug.Log("Not Walkable");
                     GetNode(x, z).SetIsWalkable(false);
                 }
             }

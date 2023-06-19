@@ -29,7 +29,8 @@ public class GridSystemVisual : MonoBehaviour
         if (TurnSystem.Instance.IsPlayerTurn())
         {
             BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
-            ShowGridPositionList(selectedAction.GetValidActionGridPositionList());
+            if (selectedAction != null)
+                ShowGridPositionList(selectedAction.GetValidActionGridPositionList());
         }
     }
 

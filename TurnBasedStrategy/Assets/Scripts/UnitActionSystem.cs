@@ -38,6 +38,12 @@ public class UnitActionSystem : MonoBehaviour
 
         if (EventSystem.current.IsPointerOverGameObject())
             return;
+        //check touch
+        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
+        {
+            if (EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
+                return;
+        }
         if (TryHandleUnitSelection()) 
             return;
 
@@ -96,7 +102,10 @@ public class UnitActionSystem : MonoBehaviour
     private void SetSelectedUnit(Unit unit)
     {
         selectedUnit = unit;
-        SetSelectedAction(unit.GetComponent<MoveAction>());
+        if (ActionHideButton.Instance.isHidden)
+            SetSelectedAction(null);
+        else
+            SetSelectedAction(unit.GetComponent<MoveAction>());
         if (OnSelectedUnitChange != null)
             OnSelectedUnitChange(this, EventArgs.Empty);
     }

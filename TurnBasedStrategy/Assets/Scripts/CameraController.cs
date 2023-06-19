@@ -38,9 +38,9 @@ public class CameraController : MonoBehaviour
             // Get movement of the finger since last frame
             Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
             if (touchDeltaPosition.y > 1)
-                inputMoveDirection.z += 1f;
-            if (touchDeltaPosition.y < -1)
                 inputMoveDirection.z -= 1f;
+            if (touchDeltaPosition.y < -1)
+                inputMoveDirection.z += 1f;
             if (touchDeltaPosition.x > 1)
                 inputMoveDirection.x -= 1f;
             if (touchDeltaPosition.x < -1)
